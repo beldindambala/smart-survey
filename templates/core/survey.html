@@ -1,0 +1,54 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <section class="surface-panel">
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <span class="status-pill dark">Connected</span>
+                <span class="status-pill dark">Accuracy ±0.003m</span>
+                <span class="status-pill dark">Battery 82%</span>
+            </div>
+            <h1 class="h3 mb-4">Live Survey Capture</h1>
+            <div class="row g-3 mb-4">
+                <div class="col-md-4"><div class="metric-box"><span>Northing</span><strong>4582.221</strong></div></div>
+                <div class="col-md-4"><div class="metric-box"><span>Easting</span><strong>1039.744</strong></div></div>
+                <div class="col-md-4"><div class="metric-box"><span>Elevation</span><strong>224.671</strong></div></div>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-3">
+                    {% for field in form %}
+                        <div class="col-12">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="btn btn-primary rounded-pill px-4 py-3 mt-4" type="submit">Capture Point</button>
+            </form>
+        </section>
+    </div>
+    <div class="col-lg-5">
+        <section class="hero-card h-100">
+            <h2 class="h4">Latest Captures</h2>
+            {% if latest_points %}
+                <div class="list-group list-group-flush mt-3">
+                    {% for point in latest_points %}
+                        <div class="list-group-item bg-transparent px-0 text-white border-secondary-subtle">
+                            <div class="fw-semibold">{{ point.point_id }} • {{ point.code }}</div>
+                            <div class="small text-white-50">{{ point.description }}</div>
+                            <div class="small text-white-50">{{ point.northing }}, {{ point.easting }}, {{ point.elevation }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-white-50 mt-3">Capture your first point to populate the live survey log.</p>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

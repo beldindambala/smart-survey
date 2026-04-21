@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<section class="hero-panel">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <span class="eyebrow">Field Intelligence Platform</span>
+            <h1 class="display-5 fw-bold mt-3">Survey faster, log digitally, and generate terrain-ready outputs in one workspace.</h1>
+            <p class="lead mt-3 text-white-50">
+                SMART SITE APP integrates with a total station for real-time surveys, digital logging,
+                DTM generation, field computations, area and volume analysis, and graphical reporting.
+            </p>
+            <div class="d-flex flex-wrap gap-3 mt-4">
+                <a class="btn btn-mint btn-lg rounded-pill px-4" href="{% url 'register' %}">Create Account</a>
+                <a class="btn btn-outline-light btn-lg rounded-pill px-4" href="{% url 'login' %}">Log In</a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="hero-card">
+                <h2 class="h4">Core Capabilities</h2>
+                <ul class="feature-list">
+                    <li>Live total station connection and survey capture</li>
+                    <li>Digitized data logging with point notes and codes</li>
+                    <li>DTM maps and field computation workflows</li>
+                    <li>Area, cut/fill, and volume calculations</li>
+                    <li>Graphical reports plus import and export tools</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<section class="hero-panel p-4 mb-4">
+    <span class="eyebrow">Graphical Reporting</span>
+    <h1 class="display-6 fw-bold mt-2">Export project-ready reports for {{ project.name }}</h1>
+    <p class="text-white-50 mb-0">Generate PDF, CSV, DXF, and LandXML outputs from the same field dataset.</p>
+</section>
+
+<div class="row g-4">
+    {% for report in reports %}
+        <div class="col-md-6">
+            <div class="smart-card h-100">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                        <h2 class="h5">{{ report.title }}</h2>
+                        <p class="text-muted mb-0">{{ report.description }}</p>
+                    </div>
+                    {% if report.is_ready %}
+                        <span class="badge rounded-pill text-bg-success">Ready</span>
+                    {% endif %}
+                </div>
+                <div class="chart-preview mt-4">
+                    <span style="height: 42%;"></span>
+                    <span style="height: 76%;"></span>
+                    <span style="height: 54%;"></span>
+                    <span style="height: 88%;"></span>
+                    <span style="height: 60%;"></span>
+                </div>
+                <div class="d-flex gap-2 mt-4">
+                    <button class="btn btn-outline-primary rounded-pill px-3" type="button">Preview</button>
+                    <button class="btn btn-primary rounded-pill px-3" type="button">Export</button>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

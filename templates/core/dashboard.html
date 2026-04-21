@@ -1,0 +1,64 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<section class="hero-panel p-4">
+    <div class="d-flex flex-column flex-lg-row justify-content-between gap-4 align-items-start align-items-lg-center">
+        <div>
+            <span class="eyebrow">Active Project</span>
+            <h1 class="display-6 fw-bold mt-2">{{ project.name }}</h1>
+            <p class="text-white-50 mb-0">{{ project.station_name }} linked • Last sync {{ project.last_sync|timesince }} ago</p>
+        </div>
+        <div class="stats-pill">
+            <div class="small text-uppercase text-white-50">Captured Points</div>
+            <div class="display-6 fw-bold">{{ point_count }}</div>
+        </div>
+    </div>
+    <div class="status-stack mt-4">
+        <span class="status-pill">Connected</span>
+        <span class="status-pill">Synced</span>
+        <span class="status-pill">Battery 82%</span>
+    </div>
+</section>
+
+<section class="mt-4">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="row g-3">
+                <div class="col-md-6"><div class="smart-card"><h3>Live Survey</h3><p>Real-time point capture from your total station.</p><a class="btn btn-primary rounded-pill" href="{% url 'survey' %}">Open</a></div></div>
+                <div class="col-md-6"><div class="smart-card"><h3>Data Logging</h3><p>Digitized field notes, codes, and coordinate history.</p></div></div>
+                <div class="col-md-6"><div class="smart-card"><h3>DTM Maps</h3><p>Generate terrain surfaces and contour-ready outputs.</p></div></div>
+                <div class="col-md-6"><div class="smart-card"><h3>Field Computations</h3><p>Run coordinate, area, and site math workflows.</p></div></div>
+                <div class="col-md-6"><div class="smart-card"><h3>Area &amp; Volume</h3><p>Evaluate cut, fill, and net volume calculations.</p></div></div>
+                <div class="col-md-6"><div class="smart-card"><h3>Reports</h3><p>Export stakeholder-ready charts and summaries.</p><a class="btn btn-outline-primary rounded-pill" href="{% url 'reports' %}">Open</a></div></div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="surface-panel h-100">
+                <h2 class="h5">Recent Points</h2>
+                {% if recent_points %}
+                    <div class="list-group list-group-flush mt-3">
+                        {% for point in recent_points %}
+                            <div class="list-group-item bg-transparent px-0">
+                                <div class="fw-semibold">{{ point.point_id }} <span class="text-muted">• {{ point.description }}</span></div>
+                                <div class="small text-muted">{{ point.captured_at|timesince }} ago</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted mt-3 mb-0">No survey points captured yet.</p>
+                {% endif %}
+
+                <h2 class="h5 mt-4">Ready Reports</h2>
+                <div class="list-group list-group-flush mt-3">
+                    {% for report in reports %}
+                        <div class="list-group-item bg-transparent px-0">
+                            <div class="fw-semibold">{{ report.title }}</div>
+                            <div class="small text-muted">{{ report.get_report_type_display }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
