@@ -7,8 +7,11 @@ class Project(models.Model):
     name = models.CharField(max_length=120)
     project_code = models.CharField(max_length=50, unique=True)
     company = models.CharField(max_length=120, blank=True)
+    description = models.TextField(blank=True)
+    location_name = models.CharField(max_length=120, blank=True)
     station_name = models.CharField(max_length=80, default="TS-08")
     is_connected = models.BooleanField(default=True)
+    active = models.BooleanField(default=False)
     last_sync = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -36,6 +39,45 @@ class SurveyPoint(models.Model):
 
     def __str__(self):
         return self.point_id
+
+
+class TelemetrySnapshot(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="telemetry")
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    elevation = models.DecimalField(max_digits=10, decimal_places=3)
+    heading = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    accuracy = models.DecimalField(max_digits=6, decimal_places=3, default=0.003)
+    source = models.CharField(max_length=80, default="Simulated Total Station Adapter")
+    captured_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-captured_at"]
+
+    def __str__(self):
+        return f"{self.project.project_code} @ {self.captured_at:%Y-%m-%d %H:%M:%S}"
+
+
+class ComputationRun(models.Model):
+    COMPUTATION_CHOICES = [
+        ("area", "Area"),
+        ("volume", "Volume"),
+        ("distance", "Distance"),
+    ]
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="computations")
+    computation_type = models.CharField(max_length=20, choices=COMPUTATION_CHOICES)
+    input_a = models.DecimalField(max_digits=12, decimal_places=3)
+    input_b = models.DecimalField(max_digits=12, decimal_places=3)
+    input_c = models.DecimalField(max_digits=12, decimal_places=3, default=0)
+    result = models.DecimalField(max_digits=14, decimal_places=3)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.get_computation_type_display()} = {self.result}"
 
 
 class Report(models.Model):

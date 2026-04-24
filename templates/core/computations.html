@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-6">
+        <section class="surface-panel">
+            <span class="eyebrow dark">Computations</span>
+            <h1 class="h3 mt-2">Area, Volume, and Distance</h1>
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="row g-3">
+                    {% for field in form %}
+                        <div class="col-12">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="btn btn-primary rounded-pill px-4 py-3 mt-4" type="submit">Run Computation</button>
+            </form>
+
+            {% if result is not None %}
+                <div class="result-card mt-4">
+                    <span>Latest Result</span>
+                    <strong>{{ result }}</strong>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+    <div class="col-lg-6">
+        <section class="hero-card h-100">
+            <h2 class="h4">Computation History</h2>
+            <div class="list-group list-group-flush mt-3">
+                {% for run in history %}
+                    <div class="list-group-item bg-transparent px-0 text-white border-secondary-subtle">
+                        <div class="fw-semibold">{{ run.get_computation_type_display }}</div>
+                        <div class="small text-white-50">Inputs: {{ run.input_a }}, {{ run.input_b }}, {{ run.input_c }}</div>
+                        <div class="small text-white-50">Result: {{ run.result }}</div>
+                    </div>
+                {% empty %}
+                    <p class="text-white-50">No computation history yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

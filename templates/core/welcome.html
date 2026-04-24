@@ -1,30 +1,69 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-<section class="hero-panel">
+<section class="hero-panel hero-home">
     <div class="row align-items-center g-4">
         <div class="col-lg-7">
-            <span class="eyebrow">Field Intelligence Platform</span>
-            <h1 class="display-5 fw-bold mt-3">Survey faster, log digitally, and generate terrain-ready outputs in one workspace.</h1>
-            <p class="lead mt-3 text-white-50">
-                SMART SITE APP integrates with a total station for real-time surveys, digital logging,
-                DTM generation, field computations, area and volume analysis, and graphical reporting.
+            <span class="eyebrow">Desktop Survey Command Center</span>
+            <h1 class="display-4 fw-bold mt-3">A green-blue field intelligence app for real-time total station surveying.</h1>
+            <p class="lead text-white-50 mt-3">
+                Manage digital field logging, DTM map workflows, computations, area and volume analysis,
+                graphical reports, and data import/export in one desktop Django application.
             </p>
             <div class="d-flex flex-wrap gap-3 mt-4">
-                <a class="btn btn-mint btn-lg rounded-pill px-4" href="{% url 'register' %}">Create Account</a>
-                <a class="btn btn-outline-light btn-lg rounded-pill px-4" href="{% url 'login' %}">Log In</a>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-mint btn-lg rounded-pill px-4" href="{% url 'dashboard' %}">Open Dashboard</a>
+                    <a class="btn btn-outline-light btn-lg rounded-pill px-4" href="{% url 'live_map' %}">Open Live Map</a>
+                {% else %}
+                    <a class="btn btn-mint btn-lg rounded-pill px-4" href="{% url 'register' %}">Register</a>
+                    <a class="btn btn-outline-light btn-lg rounded-pill px-4" href="{% url 'login' %}">Login</a>
+                {% endif %}
             </div>
         </div>
         <div class="col-lg-5">
-            <div class="hero-card">
-                <h2 class="h4">Core Capabilities</h2>
-                <ul class="feature-list">
-                    <li>Live total station connection and survey capture</li>
-                    <li>Digitized data logging with point notes and codes</li>
-                    <li>DTM maps and field computation workflows</li>
-                    <li>Area, cut/fill, and volume calculations</li>
-                    <li>Graphical reports plus import and export tools</li>
-                </ul>
+            <div class="hero-card h-100">
+                <h2 class="h4">Workflow</h2>
+                <ol class="workflow-list">
+                    <li>User registration and login</li>
+                    <li>Dashboard entry point</li>
+                    <li>Select previous projects or start a new survey</li>
+                    <li>Capture field data and monitor the live map</li>
+                    <li>Run computations and export reports</li>
+                </ol>
+                <div class="status-stack mt-4">
+                    <span class="status-pill">Topo Maps</span>
+                    <span class="status-pill">Field Data</span>
+                    <span class="status-pill">OpenStreetMap</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mt-4">
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="smart-card h-100">
+                <h3>Survey</h3>
+                <p>Capture and review topographic points, codes, notes, and telemetry.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="smart-card h-100">
+                <h3>Live Map</h3>
+                <p>Render a live OpenStreetMap and CartoDB Positron view with station telemetry.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="smart-card h-100">
+                <h3>Computations</h3>
+                <p>Run field area, volume, and distance calculations and keep an auditable history.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="smart-card h-100">
+                <h3>Reports</h3>
+                <p>Export survey points to CSV and import field logs back into the active project.</p>
             </div>
         </div>
     </div>

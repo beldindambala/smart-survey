@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Project, Report, SurveyPoint
+from .models import ComputationRun, Project, Report, SurveyPoint, TelemetrySnapshot
 
 
 @admin.register(Project)
@@ -21,3 +21,15 @@ class ReportAdmin(admin.ModelAdmin):
     list_display = ("title", "project", "report_type", "is_ready", "created_at")
     list_filter = ("report_type", "is_ready")
     search_fields = ("title",)
+
+
+@admin.register(TelemetrySnapshot)
+class TelemetrySnapshotAdmin(admin.ModelAdmin):
+    list_display = ("project", "latitude", "longitude", "elevation", "source", "captured_at")
+    list_filter = ("source", "project")
+
+
+@admin.register(ComputationRun)
+class ComputationRunAdmin(admin.ModelAdmin):
+    list_display = ("project", "computation_type", "result", "created_at")
+    list_filter = ("computation_type", "project")

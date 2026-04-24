@@ -1,0 +1,100 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-xl-8">
+        <section class="surface-panel">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div>
+                    <span class="eyebrow dark">Live Map</span>
+                    <h1 class="h3 mt-2 mb-0">{{ project.name }}</h1>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary rounded-pill active-layer" data-layer="osm" type="button">OpenStreetMap</button>
+                    <button class="btn btn-outline-primary rounded-pill" data-layer="carto" type="button">CartoDB Positron</button>
+                </div>
+            </div>
+            <div id="live-map" class="map-shell"></div>
+        </section>
+    </div>
+    <div class="col-xl-4">
+        <section class="hero-card h-100">
+            <h2 class="h4">Live Station Feed</h2>
+            <div class="telemetry-grid mt-3">
+                <div><span>Latitude</span><strong id="metric-lat">{{ latest_telemetry.latitude }}</strong></div>
+                <div><span>Longitude</span><strong id="metric-lng">{{ latest_telemetry.longitude }}</strong></div>
+                <div><span>Elevation</span><strong id="metric-elv">{{ latest_telemetry.elevation }}</strong></div>
+                <div><span>Heading</span><strong id="metric-heading">{{ latest_telemetry.heading }}</strong></div>
+            </div>
+            <p class="small text-white-50 mt-3 mb-0" id="metric-source">{{ latest_telemetry.source }}</p>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const map = L.map('live-map').setView([{{ latest_telemetry.latitude }}, {{ latest_telemetry.longitude }}], 17);
+    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    });
+    const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO'
+    });
+    osm.addTo(map);
+
+    const pointLayer = L.layerGroup().addTo(map);
+    const stationMarker = L.circleMarker([{{ latest_telemetry.latitude }}, {{ latest_telemetry.longitude }}], {
+        radius: 10,
+        color: '#47d6c2',
+        fillColor: '#47d6c2',
+        fillOpacity: 0.9
+    }).addTo(map);
+
+    function renderData(payload) {
+        const telemetry = payload.telemetry;
+        stationMarker.setLatLng([telemetry.latitude, telemetry.longitude]);
+        map.panTo([telemetry.latitude, telemetry.longitude], { animate: true });
+        document.getElementById('metric-lat').textContent = telemetry.latitude.toFixed(6);
+        document.getElementById('metric-lng').textContent = telemetry.longitude.toFixed(6);
+        document.getElementById('metric-elv').textContent = telemetry.elevation.toFixed(3);
+        document.getElementById('metric-heading').textContent = telemetry.heading.toFixed(2);
+        document.getElementById('metric-source').textContent = telemetry.source;
+
+        pointLayer.clearLayers();
+        payload.points.forEach((point, index) => {
+            const lat = telemetry.latitude + ((index + 1) * 0.00003);
+            const lng = telemetry.longitude + ((index + 1) * 0.00002);
+            L.circleMarker([lat, lng], {
+                radius: 5,
+                color: '#127c7e',
+                fillColor: '#127c7e',
+                fillOpacity: 0.85
+            }).bindPopup(`${point.point_id} - ${point.description}`).addTo(pointLayer);
+        });
+    }
+
+    async function refreshStation() {
+        const response = await fetch("{% url 'live_station_data' %}");
+        const payload = await response.json();
+        renderData(payload);
+    }
+
+    document.querySelectorAll('[data-layer]').forEach((button) => {
+        button.addEventListener('click', () => {
+            document.querySelectorAll('[data-layer]').forEach((item) => item.classList.remove('active-layer'));
+            button.classList.add('active-layer');
+            if (button.dataset.layer === 'osm') {
+                if (map.hasLayer(carto)) map.removeLayer(carto);
+                if (!map.hasLayer(osm)) osm.addTo(map);
+            } else {
+                if (map.hasLayer(osm)) map.removeLayer(osm);
+                if (!map.hasLayer(carto)) carto.addTo(map);
+            }
+        });
+    });
+
+    refreshStation();
+    setInterval(refreshStation, 6000);
+</script>
+{% endblock %}

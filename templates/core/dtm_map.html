@@ -1,0 +1,58 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-xl-8">
+        <section class="surface-panel">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div>
+                    <span class="eyebrow dark">DTM Map</span>
+                    <h1 class="h3 mt-2 mb-0">{{ project.name }}</h1>
+                </div>
+                <div class="status-stack">
+                    <span class="status-pill dark">Min {{ dtm.min_elevation }} m</span>
+                    <span class="status-pill dark">Max {{ dtm.max_elevation }} m</span>
+                    <span class="status-pill dark">Relief {{ dtm.relief }} m</span>
+                </div>
+            </div>
+
+            <div class="dtm-stage">
+                <svg viewBox="0 0 100 100" class="dtm-svg" role="img" aria-label="DTM terrain preview">
+                    {% for contour in dtm.contours %}
+                        <ellipse cx="50" cy="{{ contour.offset }}" rx="{{ 36|add:forloop.counter0|add:forloop.counter0 }}" ry="8"
+                                 class="dtm-contour" style="opacity: {{ contour.opacity }};"></ellipse>
+                    {% endfor %}
+
+                    {% for link in dtm.links %}
+                        <line x1="{{ link.x1 }}" y1="{{ link.y1 }}" x2="{{ link.x2 }}" y2="{{ link.y2 }}" class="dtm-link"></line>
+                    {% endfor %}
+
+                    {% for point in dtm.svg_points %}
+                        <circle cx="{{ point.x }}" cy="{{ point.y }}" r="2.2" class="dtm-point dtm-band-{{ point.band }}"></circle>
+                        <text x="{{ point.x|add:'1.8' }}" y="{{ point.y|add:'-1.8' }}" class="dtm-label">{{ point.id }}</text>
+                    {% endfor %}
+                </svg>
+            </div>
+        </section>
+    </div>
+
+    <div class="col-xl-4">
+        <section class="hero-card h-100">
+            <h2 class="h4">Terrain Summary</h2>
+            <p class="text-white-50">This DTM page is a lightweight terrain preview built from stored survey points. It is ideal as a runnable scaffold before full triangulation and contour generation are added.</p>
+            <div class="list-group list-group-flush mt-3">
+                {% for contour in dtm.contours %}
+                    <div class="list-group-item bg-transparent px-0 text-white border-secondary-subtle d-flex justify-content-between">
+                        <span>{{ contour.name }}</span>
+                        <span>{{ contour.elevation }} m</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a class="btn btn-mint rounded-pill" href="{% url 'reports' %}">Open Reports</a>
+                <a class="btn btn-outline-light rounded-pill" href="{% url 'survey' %}">Capture More Points</a>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<section class="hero-panel">
+    <span class="eyebrow">About SMART SITE APP</span>
+    <h1 class="display-6 fw-bold mt-3">Built for survey teams that need a practical desktop command center.</h1>
+    <p class="text-white-50 mt-3 mb-0">
+        This Django app combines project management, survey capture, computation tools, reporting,
+        and a live map view into a single interface styled for long desktop sessions.
+    </p>
+</section>
+
+<section class="mt-4">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="surface-panel h-100">
+                <h2 class="h4">Current Integration Model</h2>
+                <p class="text-muted">
+                    The app includes a simulated total-station telemetry adapter so the workflow is fully runnable now.
+                    In production, this should be replaced with the hardware SDK, serial protocol, or vendor API from your instrument.
+                </p>
+                <ul class="text-muted mb-0">
+                    <li>Use a device-specific adapter layer for real hardware</li>
+                    <li>Validate coordinate systems before using imported points</li>
+                    <li>Persist raw observations separately from computed outputs</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="surface-panel h-100">
+                <h2 class="h4">Recommended Next Steps</h2>
+                <ul class="text-muted mb-0">
+                    <li>Add role-based permissions for surveyors, reviewers, and admins</li>
+                    <li>Introduce async telemetry ingestion with Channels or a task queue</li>
+                    <li>Store uploaded imports with validation and error reporting</li>
+                    <li>Generate PDFs and richer DTM outputs from GIS or CAD services</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
