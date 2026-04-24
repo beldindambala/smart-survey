@@ -1,5 +1,6 @@
 :root {
     --bg-image: url("/static/css/images/background.jpg");
+    --home-bg-image: url("/static/css/images/home-hero.jpg");
     --primary: #127c7e;
     --primary-deep: #0d5c60;
     --mint: #47d6c2;
@@ -22,6 +23,12 @@ body {
     background:
         linear-gradient(rgba(4, 35, 43, 0.68), rgba(6, 68, 73, 0.7)),
         var(--bg-image) no-repeat center center / cover fixed;
+}
+
+body.home-page {
+    background:
+        linear-gradient(rgba(4, 35, 43, 0.5), rgba(6, 68, 73, 0.58)),
+        var(--home-bg-image) no-repeat center center / cover fixed;
 }
 
 body::before {

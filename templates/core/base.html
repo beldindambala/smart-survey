@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <div class="page-shell">
         <div class="bg-orb orb-one"></div>
         <div class="bg-orb orb-two"></div>
